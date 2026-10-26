@@ -1,6 +1,6 @@
 services:
   roscones26:
-    image: inesperez03/roscones26_roboticamarina:humble
+    image: inesperez03/roscones26_roboticamarina:humble-20261026
     container_name: roscones26
 
     gpus: all

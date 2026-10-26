@@ -14,24 +14,22 @@ bluerov = None
 blueboat_time = 0.0
 bluerov_time = 0.0
 
-
 def switch_controller(node, controller_name):
-    # Conectar con el gestor de controladores del BlueROV
+    # Connect to the controller manager
     client = node.create_client(
         SwitchController,
         '/bluerov/controller/controller_manager/switch_controller'
     )
     client.wait_for_service()
 
-    # TODO 1: Completar la petición para activar el controlador indicado.
+    # Activate the controller
     request = SwitchController.Request()
-    # TODO: añadir controller_name a la lista de controladores que se activarán
-    # TODO: elegir el modo de ejecución (ver README)
+    request.activate_controllers = [controller_name]
+    request.strictness = SwitchController.Request.BEST_EFFORT
 
-    # Enviar la petición
     future = client.call_async(request)
     rclpy.spin_until_future_complete(node, future)
-    node.get_logger().info(f'{controller_name}: activación solicitada')
+    node.get_logger().info(f'{controller_name}: activation requested')
 
 
 def send_force(publisher, force_x, force_y, force_z, torque_z):
@@ -39,7 +37,7 @@ def send_force(publisher, force_x, force_y, force_z, torque_z):
     msg = SuraWrenchCommand()
     msg.requester = 'surface_following'
     msg.controller = 'depth_hold'
-    msg.priority = 90
+    # TODO 4: Definir prioridad del mensaje
 
     # Asignar fuerzas y par
     msg.wrench.force.x = float(force_x)
@@ -88,29 +86,27 @@ def surface_following():
     rclpy.init(signal_handler_options=SignalHandlerOptions.NO)
     node = rclpy.create_node('challenge3_surface_following')
 
-    # Activar los controladores
-    switch_controller(node, 'body_force')
-    switch_controller(node, 'depth_hold')
+    # TODO 1: Activar los controladores
 
-    # TODO 2: Completar el tópico del árbitro de SURA para el BlueROV.
+    # tópico del árbitro de SURA para el BlueROV.
     publisher = node.create_publisher(
         SuraWrenchCommand,
-        'TODO_ARBITRATOR_WRENCH_TOPIC',
+        '/bluerov/controller/arbitrator/wrench',
         10
     )
 
-    # Recibir la navegación del BlueBoat
+    # TODO 2: Recibir la navegación del BlueBoat
     node.create_subscription(
         Navigator,
-        '/blueboat/navigator/navigation',
+        'TOPICO_NAVEGACION BLUEBOAT',
         blueboat_callback,
         10
     )
 
-    # Recibir la navegación del BlueROV
+    # TODO 2: Recibir la navegación del BlueBoat
     node.create_subscription(
         Navigator,
-        '/bluerov/navigator/navigation',
+        'TOPICO_NAVEGACION_BLUEROV',
         bluerov_callback,
         10
     )

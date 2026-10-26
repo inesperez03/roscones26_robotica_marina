@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>challenge_2</name>
+  <version>0.0.0</version>
+  <description>ROS 2 node for challenge 2</description>
+  <maintainer email="barajas@uji.es">usuario</maintainer>
+  <license>Apache-2.0</license>
+  <buildtool_depend>ament_python</buildtool_depend>
+  <exec_depend>rclpy</exec_depend>
+  <exec_depend>sensor_msgs</exec_depend>
+  <exec_depend>cv_bridge</exec_depend>
+  <exec_depend>python3-opencv</exec_depend>
+  <exec_depend>sura_msgs</exec_depend>
+  <exec_depend>sura_actions</exec_depend>
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>

@@ -1,0 +1,32 @@
+services:
+  roscones26:
+    image: inesperez03/roscones26_roboticamarina:humble
+    container_name: roscones26
+
+    gpus: all
+
+    network_mode: host
+    ipc: host
+
+    environment:
+      - DISPLAY=${DISPLAY}
+      - ROS_LOCALHOST_ONLY=1
+      - NVIDIA_DRIVER_CAPABILITIES=all
+      - QT_X11_NO_MITSHM=1
+
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - /dev/dri:/dev/dri
+      - ./src:/root/roscones26_roboticamarina/src/roscones26_robotica_marina/src
+
+    working_dir: /root/roscones26_roboticamarina
+
+    stdin_open: true
+    tty: true
+
+    command: >
+      bash -c "
+      echo 'source /opt/ros/humble/setup.bash' >> /root/.bashrc &&
+      echo '[ -f /root/roscones26_roboticamarina/install/setup.bash ] && source /root/roscones26_roboticamarina/install/setup.bash' >> /root/.bashrc &&
+      exec tail -f /dev/null
+      "

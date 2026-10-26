@@ -3,6 +3,7 @@
 ## 1. Iniciar Docker
 
 ```bash
+xhost +SI:localuser:root
 docker compose up -d
 docker compose exec roscones26 bash
 ```

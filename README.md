@@ -7,23 +7,13 @@ docker compose up -d
 docker compose exec roscones26 bash
 ```
 
-## 2. Compilar los retos (dentro del contenedor)
-
-```bash
-cd /root/roscones26_roboticamarina
-source /opt/ros/humble/setup.bash
-colcon build --merge-install --symlink-install --packages-select challenge_1 challenge_2 challenge_3
-source install/setup.bash
-```
-
-## 3. Challenge 1
+## 2. Challenge 1
 
 **Terminal 1 — Simulación**
 
 ```bash
 docker compose exec roscones26 bash
-source /opt/ros/humble/setup.bash
-source /root/roscones26_roboticamarina/install/setup.bash
+source install/setup.bash
 ros2 launch roscon2026_bringup challenge1.launch.py
 ```
 
@@ -31,19 +21,18 @@ ros2 launch roscon2026_bringup challenge1.launch.py
 
 ```bash
 docker compose exec roscones26 bash
-source /opt/ros/humble/setup.bash
-source /root/roscones26_roboticamarina/install/setup.bash
+colcon build --merge-install --symlink-install --packages-select challenge_1
+source install/setup.bash
 ros2 run challenge_1 gotopose
 ```
 
-## 4. Challenge 2
+## 3. Challenge 2
 
 **Terminal 1 — Simulación**
 
 ```bash
 docker compose exec roscones26 bash
-source /opt/ros/humble/setup.bash
-source /root/roscones26_roboticamarina/install/setup.bash
+source install/setup.bash
 ros2 launch roscon2026_bringup challenge2.launch.py
 ```
 
@@ -51,12 +40,12 @@ ros2 launch roscon2026_bringup challenge2.launch.py
 
 ```bash
 docker compose exec roscones26 bash
-source /opt/ros/humble/setup.bash
-source /root/roscones26_roboticamarina/install/setup.bash
+colcon build --merge-install --symlink-install --packages-select challenge_2
+source install/setup.bash
 ros2 run challenge_2 visual_servoing
 ```
 
-## 5. Challenge 3
+## 4. Challenge 3
 
 **Terminal 1 — Simulación**
 
@@ -70,8 +59,26 @@ ros2 launch roscon2026_bringup challenge3.launch.py
 
 ```bash
 docker compose exec roscones26 bash
+colcon build --merge-install --symlink-install --packages-select challenge_3
 source install/setup.bash
 ros2 run challenge_3 surface_following
+```
+
+## 5. Challenge 4
+
+**Terminal 1 — Simulación**
+
+```bash
+docker compose exec roscones26 bash
+source install/setup.bash
+ros2 launch roscon2026_bringup challenge4.launch.py
+```
+
+**Terminal 2 — Reto**
+
+```bash
+docker compose exec roscones26 bash
+colcon build --merge-install --symlink-install --packages-select challenge_4
 ```
 
 ## 6. Comprobaciones

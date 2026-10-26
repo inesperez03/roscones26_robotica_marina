@@ -1,21 +1,89 @@
-# Retos ROS 2
+# ROSCON 2026 · Robótica marina
 
-Cada reto es un paquete independiente. El primer reto incluye el nodo `gotopose`; los retos 2, 3 y 4 siguen como plantillas. Puedes desarrollar un reto sin compilar el código de los otros.
-
-Desde la raíz del workspace (`/home/usuario/roscones26_robotica_marina`):
+## 1. Iniciar Docker
 
 ```bash
+docker compose up -d
+docker compose exec roscones26 bash
+```
+
+## 2. Compilar los retos (dentro del contenedor)
+
+```bash
+cd /root/roscones26_roboticamarina
 source /opt/ros/humble/setup.bash
-source /home/usuario/roscones26_roboticamarina/install/setup.bash
-colcon build --packages-select challenge_1
+colcon build --merge-install --symlink-install --packages-select challenge_1 challenge_2 challenge_3
 source install/setup.bash
+```
+
+## 3. Challenge 1
+
+**Terminal 1 — Simulación**
+
+```bash
+docker compose exec roscones26 bash
+source /opt/ros/humble/setup.bash
+source /root/roscones26_roboticamarina/install/setup.bash
+ros2 launch roscon2026_bringup challenge1.launch.py
+```
+
+**Terminal 2 — Reto**
+
+```bash
+docker compose exec roscones26 bash
+source /opt/ros/humble/setup.bash
+source /root/roscones26_roboticamarina/install/setup.bash
 ros2 run challenge_1 gotopose
 ```
 
-Cambia `1` por `2`, `3` o `4` para trabajar en otro reto. Si añades dependencias de otros paquetes a un reto, usa `colcon build --packages-up-to challenge_1` para construir también sus dependencias. `colcon build` sin filtros intenta compilar todos los paquetes encontrados y fallará si alguno contiene errores.
+## 4. Challenge 2
 
-Para el taller, edita `src/challenge_1/challenge_1/gotopose.py`: todo el recorrido está en un único bucle dentro de `main()`. El bucle activa `BODY_VELOCITY`, calcula el error y el PID, y pide `HOLD_POSITION` al llegar. Los dos callbacks pequeños reciben la posición del barco y la meta del marcador. Solo el dibujo del marcador de RViz está en `target_marker.py`. Los otros retos siguen en `src/challenge_N/challenge_N/node.py`.
+**Terminal 1 — Simulación**
 
-`HOLD_POSITION` mantiene `body_velocity` activo para el feedforward del controlador, pero este nodo deja de publicar velocidad al llegar. El arbitrador descarta automáticamente el último comando de velocidad cuando caduca.
+```bash
+docker compose exec roscones26 bash
+source /opt/ros/humble/setup.bash
+source /root/roscones26_roboticamarina/install/setup.bash
+ros2 launch roscon2026_bringup challenge2.launch.py
+```
 
-Lanza primero la simulación con `ros2 launch roscon2026_bringup challenge1.launch.py` desde el workspace principal. En otra terminal ejecuta `gotopose` con los comandos anteriores. El propio nodo del reto crea el marcador `challenge1_goal` delante del BlueBoat al recibir la primera posición válida. En RViz mueve y suelta ese marcador: el nodo navega con el controlador de velocidad del BlueBoat y activa `HOLD_POSITION` al llegar. No hace falta configurar ni activar ninguna acción GoToPose de SURA.
+**Terminal 2 — Reto**
+
+```bash
+docker compose exec roscones26 bash
+source /opt/ros/humble/setup.bash
+source /root/roscones26_roboticamarina/install/setup.bash
+ros2 run challenge_2 visual_servoing
+```
+
+## 5. Challenge 3
+
+**Terminal 1 — Simulación**
+
+```bash
+docker compose exec roscones26 bash
+source install/setup.bash
+ros2 launch roscon2026_bringup challenge3.launch.py
+```
+
+**Terminal 2 — Reto**
+
+```bash
+docker compose exec roscones26 bash
+source install/setup.bash
+ros2 run challenge_3 surface_following
+```
+
+## 6. Comprobaciones
+
+```bash
+ros2 topic list
+ros2 control list_controllers -c /blueboat/controller/controller_manager
+ros2 control list_controllers -c /bluerov/controller/controller_manager
+```
+
+## 7. Detener Docker (desde el ordenador)
+
+```bash
+docker compose down
+```
